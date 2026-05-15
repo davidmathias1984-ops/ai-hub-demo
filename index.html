@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connells Group — AI Knowledge Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:#002147; --navy-mid:#002f5e; --navy-light:#003d7a;
+    --sky:#5bb8d4; --sky-light:#9ed8ea; --sky-pale:#e8f6fb;
+    --teal:#0e7c6e; --teal-pale:#e0f5f2;
+    --amber:#e8a020; --amber-pale:#fff3dc;
+    --white:#ffffff; --off-white:#f8fafc;
+    --gray-100:#f1f5f9; --gray-200:#e2e8f0; --gray-400:#94a3b8;
+    --gray-600:#475569; --gray-800:#1e293b; --text:#0f172a;
+  }
+  html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text);overflow-x:hidden;}
+  .page{min-height:100vh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:var(--white);box-shadow:0 0 60px rgba(0,33,71,.08);position:relative;}
+
+  /* NAV */
+  .topnav{background:var(--white);border-bottom:1px solid var(--gray-200);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+  .topnav-logo{display:flex;align-items:baseline;gap:6px;}
+  .topnav-logo .word{font-family:'DM Serif Display',serif;font-size:22px;color:var(--navy);letter-spacing:-.5px;}
+  .topnav-logo .grp{font-size:13px;font-weight:300;color:var(--sky);letter-spacing:.5px;}
+  .topnav-pill{background:var(--sky-pale);color:var(--navy-light);font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 10px;border-radius:20px;letter-spacing:1px;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 60%,#004d8c 100%);padding:32px 24px 28px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(91,184,212,.04) 28px,rgba(91,184,212,.04) 29px);}
+  .hero-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--sky);margin-bottom:10px;position:relative;}
+  .hero-title{font-family:'DM Serif Display',serif;font-size:30px;color:#fff;line-height:1.2;margin-bottom:10px;position:relative;}
+  .hero-title em{font-style:italic;color:var(--sky-light);}
+  .hero-body{font-size:14px;color:rgba(255,255,255,.72);line-height:1.65;position:relative;max-width:360px;}
+  .hero-dots{display:flex;gap:6px;margin-top:18px;position:relative;}
+  .hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(91,184,212,.35);}
+  .hero-dot.active{background:var(--sky);}
+
+  /* SECTION */
+  .section-head{padding:20px 20px 12px;display:flex;align-items:center;justify-content:space-between;}
+  .section-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-400);}
+  .section-action{font-size:12px;color:var(--sky);font-weight:500;cursor:pointer;}
+
+  /* HISTORY */
+  .history-area{margin:0 20px;border:1.5px dashed var(--gray-200);border-radius:16px;overflow:hidden;background:var(--gray-100);min-height:220px;display:flex;flex-direction:column;}
+  .history-row{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid var(--gray-200);background:var(--white);cursor:pointer;transition:background .15s;}
+  .history-row:last-child{border-bottom:none;}
+  .history-row:hover{background:var(--sky-pale);}
+  .history-avatar{width:34px;height:34px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .history-meta{flex:1;min-width:0;}
+  .history-topic{font-size:13px;font-weight:500;color:var(--gray-800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .history-preview{font-size:11px;color:var(--gray-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+  .history-time{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gray-400);flex-shrink:0;}
+  .history-badge{display:inline-block;font-size:9px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;padding:2px 7px;border-radius:10px;margin-top:4px;}
+  .history-badge.aml{background:var(--sky-pale);color:var(--navy-light);}
+  .history-badge.lettings{background:var(--teal-pale);color:var(--teal);}
+  .history-badge.mortgages{background:var(--amber-pale);color:#7a4800;}
+
+  /* STATS */
+  .stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 20px;margin-top:16px;}
+  .stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:12px 10px;text-align:center;}
+  .stat-num{font-family:'Bangers',cursive;font-size:26px;color:var(--navy);letter-spacing:1px;line-height:1;}
+  .stat-lbl{font-size:10px;color:var(--gray-400);letter-spacing:.5px;margin-top:3px;}
+
+  /* BOTTOM NAV */
+  .bottom-spacer{flex:1;min-height:24px;}
+  .bottom-nav{position:sticky;bottom:0;background:var(--white);border-top:1px solid var(--gray-200);padding:10px 12px 16px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;z-index:10;}
+  .nav-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px 8px;border-radius:12px;border:1.5px solid var(--gray-200);background:var(--white);cursor:pointer;transition:all .18s ease;position:relative;overflow:hidden;}
+  .nav-btn::before{content:'';position:absolute;inset:0;background:var(--navy);transform:scaleY(0);transform-origin:bottom;transition:transform .2s ease;z-index:0;}
+  .nav-btn:hover::before{transform:scaleY(1);}
+  .nav-btn:hover .nav-icon{filter:brightness(10);}
+  .nav-btn:hover .nav-label{color:var(--sky);}
+  .nav-icon{font-size:20px;line-height:1;position:relative;z-index:1;transition:filter .2s;}
+  .nav-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.5px;color:var(--gray-600);position:relative;z-index:1;transition:color .2s;text-transform:uppercase;}
+  .nav-btn.aml-btn{border-color:var(--navy);background:var(--navy);}
+  .nav-btn.aml-btn::before{transform:scaleY(1);}
+  .nav-btn.aml-btn .nav-icon{filter:brightness(10);}
+  .nav-btn.aml-btn .nav-label{color:var(--sky);}
+  .nav-btn.lettings-btn{border-color:var(--teal);background:var(--teal);}
+  .nav-btn.lettings-btn::before{transform:scaleY(1);background:var(--teal);}
+  .nav-btn.lettings-btn .nav-icon{filter:brightness(10);}
+  .nav-btn.lettings-btn .nav-label{color:#7ef5e8;}
+  .nav-btn.mortgages-btn{border-color:#c47800;background:#7a4800;}
+  .nav-btn.mortgages-btn::before{transform:scaleY(1);background:#7a4800;}
+  .nav-btn.mortgages-btn .nav-icon{filter:brightness(10);}
+  .nav-btn.mortgages-btn .nav-label{color:var(--amber);}
+
+  /* OVERLAY */
+  .overlay{position:fixed;inset:0;background:rgba(0,20,40,.75);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(4px);}
+  .overlay.open{opacity:1;pointer-events:all;}
+  .overlay-box{width:100%;max-width:420px;max-height:92vh;overflow-y:auto;border-radius:22px;position:relative;transform:translateY(24px) scale(.97);transition:transform .3s ease;scrollbar-width:none;}
+  .overlay-box::-webkit-scrollbar{display:none;}
+  .overlay.open .overlay-box{transform:translateY(0) scale(1);}
+  .overlay-close{position:absolute;top:14px;right:14px;z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;line-height:1;}
+  .overlay-close:hover{background:rgba(255,255,255,.28);}
+
+  /* SHARED CARD COMPONENTS */
+  .rc-logo{display:block;height:40px;width:auto;}
+  .rc-av-sec{padding:14px 16px 0;display:flex;flex-direction:column;align-items:center;position:relative;z-index:2;}
+  .rc-av-face{animation:rcbob 3s ease-in-out infinite;display:block;}
+  @keyframes rcbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .rc-av-ring.speaking .rc-av-face{animation:rctalk .15s ease-in-out infinite alternate;}
+  @keyframes rctalk{from{transform:scaleY(1)}to{transform:scaleY(.97) translateY(-2px)}}
+  .rc-dots{display:inline-flex;gap:4px;align-items:center;}
+  .rc-dots span{width:6px;height:6px;border-radius:50%;opacity:.35;animation:rcd 1.2s ease-in-out infinite;}
+  .rc-dots span:nth-child(2){animation-delay:.2s}.rc-dots span:nth-child(3){animation-delay:.4s}
+  @keyframes rcd{0%,80%,100%{opacity:.3;transform:scale(1)}40%{opacity:1;transform:scale(1.3)}}
+  .rc-stats{padding:8px 16px;display:grid;grid-template-columns:1fr 1fr;gap:4px;position:relative;z-index:2;}
+  .rc-sl{font-size:9px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;}
+  .rc-sv{font-family:'Bangers',cursive;font-size:17px;letter-spacing:1px;}
+  .rc-msgs{height:110px;overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin;}
+  .rc-msg{font-size:12px;line-height:1.45;padding:6px 10px;border-radius:8px;max-width:90%;animation:rcup .22s ease-out;}
+  @keyframes rcup{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .rc-mr{background:rgba(255,255,255,.06);color:rgba(255,255,255,.88);align-self:flex-start;border:1px solid rgba(255,255,255,.1);}
+  .rc-chips{display:flex;flex-wrap:wrap;gap:5px;padding:7px 10px 4px;}
+  .rc-inp{flex:1;background:transparent;border:none;outline:none;color:rgba(255,255,255,.9);font-family:'Rajdhani',sans-serif;font-size:13px;padding:9px 12px;}
+  .rc-inp::placeholder{color:rgba(255,255,255,.25);}
+  .rc-ask{background:transparent;border:none;cursor:pointer;padding:0 14px;font-family:'Bangers',cursive;font-size:16px;letter-spacing:1px;transition:background .15s;}
+  .rc-ask:disabled{opacity:.4;cursor:default;}
+  .rc-dl{width:6px;height:6px;border-radius:50%;background:#44ff88;flex-shrink:0;animation:rcpl 2s ease-in-out infinite;}
+  @keyframes rcpl{0%,100%{box-shadow:0 0 0 0 rgba(68,255,136,.45)}50%{box-shadow:0 0 0 4px rgba(68,255,136,0)}}
+  .rc-corner{position:absolute;top:58px;right:12px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;writing-mode:vertical-rl;z-index:1;}
+
+  /* ── MILES (navy/sky) ── */
+  .miles-card{width:100%;background:linear-gradient(165deg,#001e3c 0%,#002f5e 45%,#001a34 100%);border-radius:18px;border:3px solid #5bb8d4;box-shadow:0 0 0 5px #001020,0 0 0 7px #5bb8d4,0 24px 60px rgba(0,0,0,.8);overflow:hidden;font-family:'Rajdhani',sans-serif;position:relative;}
+  .miles-card::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(45deg,transparent,transparent 26px,rgba(91,184,212,.025) 26px,rgba(91,184,212,.025) 27px);}
+  .miles-card .rc-hdr{background:#fff;padding:10px 14px 8px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #003068;position:relative;z-index:2;}
+  .miles-card .rc-badge{background:#002147;color:#5bb8d4;font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:1.5px;white-space:nowrap;flex-shrink:0;}
+  .miles-card .rc-ribbon{background:#002f5e;border-bottom:1px solid rgba(91,184,212,.4);padding:5px 0;text-align:center;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#5bb8d4;position:relative;z-index:2;}
+  .miles-card .rc-av-ring{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#003070 0%,#004490 55%,#002860 100%);border:4px solid #5bb8d4;box-shadow:0 0 0 3px #001a34,0 0 22px rgba(91,184,212,.45);display:flex;align-items:center;justify-content:center;font-size:58px;user-select:none;}
+  .miles-card .rc-name{margin-top:8px;font-family:'Bangers',cursive;font-size:32px;letter-spacing:5px;color:#fff;text-align:center;text-shadow:2px 2px 0 rgba(0,0,0,.45);}
+  .miles-card .rc-role{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#5bb8d4;text-align:center;margin-top:-2px;font-family:'Share Tech Mono',monospace;}
+  .miles-card .rc-bubble{margin:12px 16px 0;position:relative;z-index:2;background:rgba(255,255,255,.06);border:1px solid rgba(91,184,212,.35);border-radius:12px;padding:11px 14px;min-height:60px;font-size:12.5px;color:rgba(255,255,255,.9);line-height:1.6;display:flex;align-items:flex-start;}
+  .miles-card .rc-bubble::before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);border:8px solid transparent;border-bottom-color:rgba(91,184,212,.35);border-top:0;}
+  .miles-card .rc-bubble::after{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);border:7px solid transparent;border-bottom-color:#002a52;border-top:0;}
+  .miles-card .rc-dots span{background:#5bb8d4;}
+  .miles-card .rc-divider{margin:10px 16px 0;border:none;border-top:1px solid rgba(91,184,212,.22);position:relative;z-index:2;}
+  .miles-card .rc-divider::after{content:'◆ COMPLIANCE RATING ◆';position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#002550;color:rgba(91,184,212,.7);font-size:9px;letter-spacing:2px;padding:0 8px;font-family:'Share Tech Mono',monospace;}
+  .miles-card .rc-stat{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(255,255,255,.05);border-radius:6px;border-left:2px solid #5bb8d4;}
+  .miles-card .rc-sv{color:#5bb8d4;}
+  .miles-card .rc-chat{margin:8px 16px 10px;background:rgba(0,0,0,.28);border:1px solid rgba(91,184,212,.2);border-radius:10px;overflow:hidden;position:relative;z-index:2;}
+  .miles-card .rc-ch{background:rgba(91,184,212,.08);border-bottom:1px solid rgba(91,184,212,.18);color:rgba(91,184,212,.85);padding:6px 12px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;display:flex;align-items:center;gap:7px;}
+  .miles-card .rc-chips{border-top:1px solid rgba(91,184,212,.1);}
+  .miles-card .rc-chip{background:rgba(91,184,212,.1);border:1px solid rgba(91,184,212,.28);color:rgba(91,184,212,.9);font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer;font-family:'Share Tech Mono',monospace;letter-spacing:.5px;transition:background .15s;white-space:nowrap;}
+  .miles-card .rc-chip:hover{background:rgba(91,184,212,.25);}
+  .miles-card .rc-ir{display:flex;border-top:1px solid rgba(91,184,212,.2);}
+  .miles-card .rc-ask{color:#5bb8d4;border-left:1px solid rgba(91,184,212,.2);}
+  .miles-card .rc-ask:hover{background:rgba(91,184,212,.28);}
+  .miles-card .rc-mu{background:rgba(91,184,212,.14);color:rgba(255,255,255,.88);align-self:flex-end;border:1px solid rgba(91,184,212,.28);}
+  .miles-card .rc-disc{margin:0 16px 12px;padding:6px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(91,184,212,.15);border-radius:6px;position:relative;z-index:2;font-size:9px;color:rgba(255,255,255,.3);text-align:center;font-family:'Share Tech Mono',monospace;letter-spacing:.5px;line-height:1.55;}
+  .miles-card .rc-corner{color:rgba(91,184,212,.1);}
+  .miles-card .rc-msgs{scrollbar-color:rgba(91,184,212,.3) transparent;}
+
+  /* ── NORA (teal/green) ── */
+  .nora-card{width:100%;background:linear-gradient(165deg,#001f1c 0%,#0b4d44 45%,#001a17 100%);border-radius:18px;border:3px solid #2ecfc0;box-shadow:0 0 0 5px #001210,0 0 0 7px #2ecfc0,0 24px 60px rgba(0,0,0,.8);overflow:hidden;font-family:'Rajdhani',sans-serif;position:relative;}
+  .nora-card::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(45deg,transparent,transparent 26px,rgba(46,207,192,.025) 26px,rgba(46,207,192,.025) 27px);}
+  .nora-card .rc-hdr{background:#fff;padding:10px 14px 8px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0b4d44;position:relative;z-index:2;}
+  .nora-card .rc-badge{background:#002147;color:#2ecfc0;font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:1.5px;white-space:nowrap;flex-shrink:0;}
+  .nora-card .rc-ribbon{background:#0b4d44;border-bottom:1px solid rgba(46,207,192,.4);padding:5px 0;text-align:center;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#2ecfc0;position:relative;z-index:2;}
+  .nora-card .rc-av-ring{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#0b4d44 0%,#0e6b5e 55%,#083d35 100%);border:4px solid #2ecfc0;box-shadow:0 0 0 3px #001a17,0 0 22px rgba(46,207,192,.45);display:flex;align-items:center;justify-content:center;font-size:58px;user-select:none;}
+  .nora-card .rc-name{margin-top:8px;font-family:'Bangers',cursive;font-size:32px;letter-spacing:5px;color:#fff;text-align:center;text-shadow:2px 2px 0 rgba(0,0,0,.45);}
+  .nora-card .rc-role{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#2ecfc0;text-align:center;margin-top:-2px;font-family:'Share Tech Mono',monospace;}
+  .nora-card .rc-bubble{margin:12px 16px 0;position:relative;z-index:2;background:rgba(255,255,255,.06);border:1px solid rgba(46,207,192,.35);border-radius:12px;padding:11px 14px;min-height:60px;font-size:12.5px;color:rgba(255,255,255,.9);line-height:1.6;display:flex;align-items:flex-start;}
+  .nora-card .rc-bubble::before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);border:8px solid transparent;border-bottom-color:rgba(46,207,192,.35);border-top:0;}
+  .nora-card .rc-bubble::after{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);border:7px solid transparent;border-bottom-color:#092e29;border-top:0;}
+  .nora-card .rc-dots span{background:#2ecfc0;}
+  .nora-card .rc-divider{margin:10px 16px 0;border:none;border-top:1px solid rgba(46,207,192,.22);position:relative;z-index:2;}
+  .nora-card .rc-divider::after{content:'◆ LETTINGS RATING ◆';position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#0b3d35;color:rgba(46,207,192,.7);font-size:9px;letter-spacing:2px;padding:0 8px;font-family:'Share Tech Mono',monospace;}
+  .nora-card .rc-stat{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(255,255,255,.05);border-radius:6px;border-left:2px solid #2ecfc0;}
+  .nora-card .rc-sv{color:#2ecfc0;}
+  .nora-card .rc-chat{margin:8px 16px 10px;background:rgba(0,0,0,.28);border:1px solid rgba(46,207,192,.2);border-radius:10px;overflow:hidden;position:relative;z-index:2;}
+  .nora-card .rc-ch{background:rgba(46,207,192,.08);border-bottom:1px solid rgba(46,207,192,.18);color:rgba(46,207,192,.85);padding:6px 12px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;display:flex;align-items:center;gap:7px;}
+  .nora-card .rc-chips{border-top:1px solid rgba(46,207,192,.1);}
+  .nora-card .rc-chip{background:rgba(46,207,192,.1);border:1px solid rgba(46,207,192,.28);color:rgba(46,207,192,.9);font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer;font-family:'Share Tech Mono',monospace;letter-spacing:.5px;transition:background .15s;white-space:nowrap;}
+  .nora-card .rc-chip:hover{background:rgba(46,207,192,.25);}
+  .nora-card .rc-ir{display:flex;border-top:1px solid rgba(46,207,192,.2);}
+  .nora-card .rc-ask{color:#2ecfc0;border-left:1px solid rgba(46,207,192,.2);}
+  .nora-card .rc-ask:hover{background:rgba(46,207,192,.28);}
+  .nora-card .rc-mu{background:rgba(46,207,192,.14);color:rgba(255,255,255,.88);align-self:flex-end;border:1px solid rgba(46,207,192,.28);}
+  .nora-card .rc-disc{margin:0 16px 12px;padding:6px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(46,207,192,.15);border-radius:6px;position:relative;z-index:2;font-size:9px;color:rgba(255,255,255,.3);text-align:center;font-family:'Share Tech Mono',monospace;letter-spacing:.5px;line-height:1.55;}
+  .nora-card .rc-corner{color:rgba(46,207,192,.1);}
+  .nora-card .rc-msgs{scrollbar-color:rgba(46,207,192,.3) transparent;}
+
+  /* ── MILO (amber/gold) ── */
+  .milo-card{width:100%;background:linear-gradient(165deg,#1f1200 0%,#3d2400 45%,#1a1000 100%);border-radius:18px;border:3px solid #e8a020;box-shadow:0 0 0 5px #120a00,0 0 0 7px #e8a020,0 24px 60px rgba(0,0,0,.8);overflow:hidden;font-family:'Rajdhani',sans-serif;position:relative;}
+  .milo-card::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(45deg,transparent,transparent 26px,rgba(232,160,32,.025) 26px,rgba(232,160,32,.025) 27px);}
+  .milo-card .rc-hdr{background:#fff;padding:10px 14px 8px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #3d2400;position:relative;z-index:2;}
+  .milo-card .rc-badge{background:#1f1200;color:#e8a020;font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:1.5px;white-space:nowrap;flex-shrink:0;}
+  .milo-card .rc-ribbon{background:#3d2400;border-bottom:1px solid rgba(232,160,32,.4);padding:5px 0;text-align:center;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#e8a020;position:relative;z-index:2;}
+  .milo-card .rc-av-ring{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#3d2400 0%,#5a3800 55%,#2e1a00 100%);border:4px solid #e8a020;box-shadow:0 0 0 3px #1a1000,0 0 22px rgba(232,160,32,.45);display:flex;align-items:center;justify-content:center;font-size:58px;user-select:none;}
+  .milo-card .rc-name{margin-top:8px;font-family:'Bangers',cursive;font-size:32px;letter-spacing:5px;color:#fff;text-align:center;text-shadow:2px 2px 0 rgba(0,0,0,.45);}
+  .milo-card .rc-role{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#e8a020;text-align:center;margin-top:-2px;font-family:'Share Tech Mono',monospace;}
+  .milo-card .rc-bubble{margin:12px 16px 0;position:relative;z-index:2;background:rgba(255,255,255,.06);border:1px solid rgba(232,160,32,.35);border-radius:12px;padding:11px 14px;min-height:60px;font-size:12.5px;color:rgba(255,255,255,.9);line-height:1.6;display:flex;align-items:flex-start;}
+  .milo-card .rc-bubble::before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);border:8px solid transparent;border-bottom-color:rgba(232,160,32,.35);border-top:0;}
+  .milo-card .rc-bubble::after{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);border:7px solid transparent;border-bottom-color:#2e1800;border-top:0;}
+  .milo-card .rc-dots span{background:#e8a020;}
+  .milo-card .rc-divider{margin:10px 16px 0;border:none;border-top:1px solid rgba(232,160,32,.22);position:relative;z-index:2;}
+  .milo-card .rc-divider::after{content:'◆ MORTGAGE RATING ◆';position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#2e1800;color:rgba(232,160,32,.7);font-size:9px;letter-spacing:2px;padding:0 8px;font-family:'Share Tech Mono',monospace;}
+  .milo-card .rc-stat{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:rgba(255,255,255,.05);border-radius:6px;border-left:2px solid #e8a020;}
+  .milo-card .rc-sv{color:#e8a020;}
+  .milo-card .rc-chat{margin:8px 16px 10px;background:rgba(0,0,0,.28);border:1px solid rgba(232,160,32,.2);border-radius:10px;overflow:hidden;position:relative;z-index:2;}
+  .milo-card .rc-ch{background:rgba(232,160,32,.08);border-bottom:1px solid rgba(232,160,32,.18);color:rgba(232,160,32,.85);padding:6px 12px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;display:flex;align-items:center;gap:7px;}
+  .milo-card .rc-chips{border-top:1px solid rgba(232,160,32,.1);}
+  .milo-card .rc-chip{background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.28);color:rgba(232,160,32,.9);font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer;font-family:'Share Tech Mono',monospace;letter-spacing:.5px;transition:background .15s;white-space:nowrap;}
+  .milo-card .rc-chip:hover{background:rgba(232,160,32,.25);}
+  .milo-card .rc-ir{display:flex;border-top:1px solid rgba(232,160,32,.2);}
+  .milo-card .rc-ask{color:#e8a020;border-left:1px solid rgba(232,160,32,.2);}
+  .milo-card .rc-ask:hover{background:rgba(232,160,32,.28);}
+  .milo-card .rc-mu{background:rgba(232,160,32,.14);color:rgba(255,255,255,.88);align-self:flex-end;border:1px solid rgba(232,160,32,.28);}
+  .milo-card .rc-disc{margin:0 16px 12px;padding:6px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(232,160,32,.15);border-radius:6px;position:relative;z-index:2;font-size:9px;color:rgba(255,255,255,.3);text-align:center;font-family:'Share Tech Mono',monospace;letter-spacing:.5px;line-height:1.55;}
+  .milo-card .rc-corner{color:rgba(232,160,32,.1);}
+  .milo-card .rc-msgs{scrollbar-color:rgba(232,160,32,.3) transparent;}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;border:1px solid var(--sky);opacity:0;pointer-events:none;transition:all .3s ease;white-space:nowrap;z-index:500;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav class="topnav">
+    <div class="topnav-logo"><span class="word">Connells</span><span class="grp">group</span></div>
+    <span class="topnav-pill">AI HUB · BETA</span>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow">Your AI Knowledge Hub</div>
+    <h1 class="hero-title">Meet your <em>AI sidekicks</em> for estate agency</h1>
+    <p class="hero-body">Specialist AI agents trained on property, compliance, lettings, and mortgages — built to make your day faster, smarter, and a whole lot less complicated.</p>
+    <div class="hero-dots">
+      <div class="hero-dot active"></div><div class="hero-dot"></div><div class="hero-dot"></div><div class="hero-dot"></div><div class="hero-dot"></div>
+    </div>
+  </section>
+
+  <div class="section-head">
+    <span class="section-label">Recent conversations</span>
+    <span class="section-action">See all →</span>
+  </div>
+
+  <div class="history-area">
+    <div class="history-row">
+      <div class="history-avatar">🕵️</div>
+      <div class="history-meta">
+        <div class="history-topic">Source of funds — cash buyer query</div>
+        <div class="history-preview">What documents do I need when a buyer claims...</div>
+        <span class="history-badge aml">AML</span>
+      </div>
+      <div class="history-time">2h ago</div>
+    </div>
+    <div class="history-row">
+      <div class="history-avatar">🏠</div>
+      <div class="history-meta">
+        <div class="history-topic">Section 21 notices — latest rules</div>
+        <div class="history-preview">Can I still serve a Section 21 after the Renters...</div>
+        <span class="history-badge lettings">Lettings</span>
+      </div>
+      <div class="history-time">Yesterday</div>
+    </div>
+    <div class="history-row">
+      <div class="history-avatar">🏦</div>
+      <div class="history-meta">
+        <div class="history-topic">Self-employed mortgage criteria</div>
+        <div class="history-preview">My buyer is a contractor — which lenders will...</div>
+        <span class="history-badge mortgages">Mortgages</span>
+      </div>
+      <div class="history-time">2 days ago</div>
+    </div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat-card"><div class="stat-num">5</div><div class="stat-lbl">AI Agents</div></div>
+    <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-lbl">Available</div></div>
+    <div class="stat-card"><div class="stat-num">MLR17</div><div class="stat-lbl">Compliant</div></div>
+  </div>
+
+  <div class="bottom-spacer"></div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn aml-btn" onclick="openMiles()">
+      <span class="nav-icon">🕵️</span><span class="nav-label">AML</span>
+    </button>
+    <button class="nav-btn lettings-btn" onclick="openNora()">
+      <span class="nav-icon">🏠</span><span class="nav-label">Lettings</span>
+    </button>
+    <button class="nav-btn mortgages-btn" onclick="openMilo()">
+      <span class="nav-icon">🏦</span><span class="nav-label">Mortgages</span>
+    </button>
+    <button class="nav-btn" onclick="showToast('EA Knowledge — coming soon!')">
+      <span class="nav-icon">📋</span><span class="nav-label">EA</span>
+    </button>
+    <button class="nav-btn" onclick="showToast('Compliance Hub — coming soon!')">
+      <span class="nav-icon">⚖️</span><span class="nav-label">Compliance</span>
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- MILES OVERLAY -->
+<div class="overlay" id="milesOverlay" onclick="handleOverlayClick(event,'milesOverlay')">
+  <div class="overlay-box">
+    <button class="overlay-close" onclick="closeMiles()">✕</button>
+    <div class="miles-card">
+      <div class="rc-corner">AML · KYC · MLR2017</div>
+      <div class="rc-hdr">
+        <svg class="rc-logo" viewBox="0 0 220 72" xmlns="http://www.w3.org/2000/svg"><text x="4" y="50" font-family="Georgia,serif" font-size="48" font-weight="700" fill="#003068" letter-spacing="-1">Connells</text><text x="108" y="68" font-family="Georgia,serif" font-size="22" font-weight="400" fill="#6bbde0" letter-spacing="1">group</text></svg>
+        <span class="rc-badge">AML-001</span>
+      </div>
+      <div class="rc-ribbon">🕵️ Estate Agent Compliance Advisor</div>
+      <div class="rc-av-sec">
+        <div class="rc-av-ring" id="milesRing"><span class="rc-av-face">🕵️</span></div>
+        <div class="rc-name">MILES</div>
+        <div class="rc-role">AML &amp; KYC Specialist · MLR 2017</div>
+      </div>
+      <div class="rc-bubble"><span id="miles-st">Hi, I'm Miles — your AI AML &amp; KYC sidekick for estate agency. Think of me as part compliance expert, part transaction detective, and part professional red-flag spotter. Just ask away.</span></div>
+      <hr class="rc-divider">
+      <div class="rc-stats">
+        <div class="rc-stat"><span class="rc-sl">Reg Knowledge</span><span class="rc-sv">98</span></div>
+        <div class="rc-stat"><span class="rc-sl">Risk Intel</span><span class="rc-sv">95</span></div>
+        <div class="rc-stat"><span class="rc-sl">CDD Mastery</span><span class="rc-sv">97</span></div>
+        <div class="rc-stat"><span class="rc-sl">SAR Filing</span><span class="rc-sv">99</span></div>
+      </div>
+      <div class="rc-chat">
+        <div class="rc-ch"><div class="rc-dl"></div>Ask a compliance question</div>
+        <div class="rc-msgs" id="miles-msgs"></div>
+        <div class="rc-chips">
+          <span class="rc-chip" data-agent="miles" data-q="What ID do I need from a buyer?">Buyer ID</span>
+          <span class="rc-chip" data-agent="miles" data-q="When must I file a SAR?">SAR filing</span>
+          <span class="rc-chip" data-agent="miles" data-q="What is a PEP and how do I handle one?">PEPs</span>
+          <span class="rc-chip" data-agent="miles" data-q="What are red flags for money laundering in property?">Red flags</span>
+          <span class="rc-chip" data-agent="miles" data-q="Do I need to verify the seller?">Seller CDD</span>
+          <span class="rc-chip" data-agent="miles" data-q="What is source of funds and why does it matter?">Source of funds</span>
+        </div>
+        <div class="rc-ir">
+          <input class="rc-inp" id="miles-inp" placeholder="Ask an AML/KYC question…" autocomplete="off">
+          <button class="rc-ask" id="miles-btn">ASK</button>
+        </div>
+      </div>
+      <div class="rc-disc">⚠ Guidance only · Not legal advice · Always consult your MLRO or legal counsel</div>
+    </div>
+  </div>
+</div>
+
+<!-- NORA OVERLAY -->
+<div class="overlay" id="noraOverlay" onclick="handleOverlayClick(event,'noraOverlay')">
+  <div class="overlay-box">
+    <button class="overlay-close" onclick="closeNora()">✕</button>
+    <div class="nora-card">
+      <div class="rc-corner">LETTINGS · LEGISLATION · RRB</div>
+      <div class="rc-hdr">
+        <svg class="rc-logo" viewBox="0 0 220 72" xmlns="http://www.w3.org/2000/svg"><text x="4" y="50" font-family="Georgia,serif" font-size="48" font-weight="700" fill="#003068" letter-spacing="-1">Connells</text><text x="108" y="68" font-family="Georgia,serif" font-size="22" font-weight="400" fill="#6bbde0" letter-spacing="1">group</text></svg>
+        <span class="rc-badge">LET-001</span>
+      </div>
+      <div class="rc-ribbon">🏠 Lettings Legislation Advisor</div>
+      <div class="rc-av-sec">
+        <div class="rc-av-ring" id="noraRing"><span class="rc-av-face">👩‍⚖️</span></div>
+        <div class="rc-name">NORA</div>
+        <div class="rc-role">Lettings Law Specialist · RRB 2024</div>
+      </div>
+      <div class="rc-bubble"><span id="nora-st">Hi, I'm Nora — your lettings legislation expert. Whether you're navigating landlord obligations, tenant rights, deposit rules, or the Renters' Rights Bill, I'm here to cut through the complexity. Just ask away.</span></div>
+      <hr class="rc-divider">
+      <div class="rc-stats">
+        <div class="rc-stat"><span class="rc-sl">Legislation</span><span class="rc-sv">99</span></div>
+        <div class="rc-stat"><span class="rc-sl">Tenant Law</span><span class="rc-sv">97</span></div>
+        <div class="rc-stat"><span class="rc-sl">Landlord Regs</span><span class="rc-sv">98</span></div>
+        <div class="rc-stat"><span class="rc-sl">Deposits</span><span class="rc-sv">96</span></div>
+      </div>
+      <div class="rc-chat">
+        <div class="rc-ch"><div class="rc-dl"></div>Ask a lettings question</div>
+        <div class="rc-msgs" id="nora-msgs"></div>
+        <div class="rc-chips">
+          <span class="rc-chip" data-agent="nora" data-q="What does the Renters Rights Bill mean for landlords?">Renters' Rights Bill</span>
+          <span class="rc-chip" data-agent="nora" data-q="What are a landlord's repair obligations?">Repairs</span>
+          <span class="rc-chip" data-agent="nora" data-q="How do tenancy deposit rules work?">Deposits</span>
+          <span class="rc-chip" data-agent="nora" data-q="What notice must I give a tenant to end a tenancy?">Notice periods</span>
+          <span class="rc-chip" data-agent="nora" data-q="What are the rules around tenant referencing?">Referencing</span>
+          <span class="rc-chip" data-agent="nora" data-q="What is a HMO and do I need a licence?">HMOs</span>
+        </div>
+        <div class="rc-ir">
+          <input class="rc-inp" id="nora-inp" placeholder="Ask a lettings legislation question…" autocomplete="off">
+          <button class="rc-ask" id="nora-btn">ASK</button>
+        </div>
+      </div>
+      <div class="rc-disc">⚠ Guidance only · Not legal advice · Always consult a qualified solicitor for specific cases</div>
+    </div>
+  </div>
+</div>
+
+<!-- MILO OVERLAY -->
+<div class="overlay" id="miloOverlay" onclick="handleOverlayClick(event,'miloOverlay')">
+  <div class="overlay-box">
+    <button class="overlay-close" onclick="closeMilo()">✕</button>
+    <div class="milo-card">
+      <div class="rc-corner">MORTGAGES · LENDERS · FCA</div>
+      <div class="rc-hdr">
+        <svg class="rc-logo" viewBox="0 0 220 72" xmlns="http://www.w3.org/2000/svg"><text x="4" y="50" font-family="Georgia,serif" font-size="48" font-weight="700" fill="#003068" letter-spacing="-1">Connells</text><text x="108" y="68" font-family="Georgia,serif" font-size="22" font-weight="400" fill="#6bbde0" letter-spacing="1">group</text></svg>
+        <span class="rc-badge">MTG-001</span>
+      </div>
+      <div class="rc-ribbon">🏦 Mortgage Advisor Guide</div>
+      <div class="rc-av-sec">
+        <div class="rc-av-ring" id="miloRing"><span class="rc-av-face">🧑‍💼</span></div>
+        <div class="rc-name">MILO</div>
+        <div class="rc-role">Mortgage Specialist · FCA Regulated</div>
+      </div>
+      <div class="rc-bubble"><span id="milo-st">Hi, I'm Milo — your mortgage knowledge guide for estate agency. I can help with lender criteria, mortgage products, affordability rules, and how to support your buyers through the process. Just ask away.</span></div>
+      <hr class="rc-divider">
+      <div class="rc-stats">
+        <div class="rc-stat"><span class="rc-sl">Lender Intel</span><span class="rc-sv">97</span></div>
+        <div class="rc-stat"><span class="rc-sl">Products</span><span class="rc-sv">96</span></div>
+        <div class="rc-stat"><span class="rc-sl">Affordability</span><span class="rc-sv">98</span></div>
+        <div class="rc-stat"><span class="rc-sl">FCA Rules</span><span class="rc-sv">95</span></div>
+      </div>
+      <div class="rc-chat">
+        <div class="rc-ch"><div class="rc-dl"></div>Ask a mortgage question</div>
+        <div class="rc-msgs" id="milo-msgs"></div>
+        <div class="rc-chips">
+          <span class="rc-chip" data-agent="milo" data-q="What is a mortgage in principle and why does it matter?">Mortgage in Principle</span>
+          <span class="rc-chip" data-agent="milo" data-q="How does affordability assessment work for lenders?">Affordability</span>
+          <span class="rc-chip" data-agent="milo" data-q="What is the difference between fixed and tracker mortgages?">Fixed vs Tracker</span>
+          <span class="rc-chip" data-agent="milo" data-q="How does Help to Buy or shared ownership work?">Help to Buy</span>
+          <span class="rc-chip" data-agent="milo" data-q="What happens at mortgage offer stage?">Mortgage Offer</span>
+          <span class="rc-chip" data-agent="milo" data-q="What are typical lender criteria for self-employed buyers?">Self-Employed</span>
+        </div>
+        <div class="rc-ir">
+          <input class="rc-inp" id="milo-inp" placeholder="Ask a mortgage question…" autocomplete="off">
+          <button class="rc-ask" id="milo-btn">ASK</button>
+        </div>
+      </div>
+      <div class="rc-disc">⚠ Guidance only · Not regulated financial advice · Always refer clients to a qualified mortgage adviser</div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ── TOAST ── */
+  let toastTimer;
+  window.showToast = function(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  };
+
+  /* ── OVERLAY HELPERS ── */
+  function openOverlay(id, focusId) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (focusId) setTimeout(() => document.getElementById(focusId).focus(), 350);
+  }
+  function closeOverlay(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  window.openMiles  = () => openOverlay('milesOverlay', 'miles-inp');
+  window.closeMiles = () => closeOverlay('milesOverlay');
+  window.openNora   = () => openOverlay('noraOverlay',  'nora-inp');
+  window.closeNora  = () => closeOverlay('noraOverlay');
+  window.openMilo   = () => openOverlay('miloOverlay',  'milo-inp');
+  window.closeMilo  = () => closeOverlay('miloOverlay');
+
+  window.handleOverlayClick = function(e, id) {
+    if (e.target === document.getElementById(id)) closeOverlay(id);
+  };
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeOverlay('milesOverlay'); closeOverlay('noraOverlay'); closeOverlay('miloOverlay'); }
+  });
+
+  /* ── AGENT FACTORY ── */
+  function createAgent(cfg) {
+    const st    = document.getElementById(cfg.stId);
+    const ring  = document.getElementById(cfg.ringId);
+    const msgs  = document.getElementById(cfg.msgsId);
+    const inp   = document.getElementById(cfg.inpId);
+    const btn   = document.getElementById(cfg.btnId);
+    let history = [], busy = false;
+
+    function addMsg(text, who) {
+      const d = document.createElement('div');
+      d.className = 'rc-msg ' + (who === 'u' ? 'rc-mu' : 'rc-mr');
+      d.textContent = text;
+      msgs.appendChild(d);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+    function setTyping(on) {
+      if (on) {
+        st.innerHTML = '<span class="rc-dots"><span></span><span></span><span></span></span>';
+        ring.classList.add('speaking');
+      } else {
+        ring.classList.remove('speaking');
+      }
+    }
+    function typeOut(text) {
+      setTyping(false);
+      st.textContent = '';
+      let i = 0;
+      ring.classList.add('speaking');
+      const iv = setInterval(() => {
+        if (i < text.length) st.textContent += text[i++];
+        else { clearInterval(iv); ring.classList.remove('speaking'); }
+      }, 16);
+    }
+    async function ask(q) {
+      q = (q || inp.value).trim();
+      if (!q || busy) return;
+      busy = true; btn.disabled = true; inp.value = '';
+      addMsg(q, 'u');
+      history.push({ role: 'user', content: q });
+      setTyping(true);
+      try {
+        const r = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: cfg.system, messages: history })
+        });
+        const data = await r.json();
+        const reply = data.content?.find(b => b.type === 'text')?.text || 'Connection issue — please retry.';
+        history.push({ role: 'assistant', content: reply });
+        setTyping(false); addMsg(reply, 'r'); typeOut(reply);
+      } catch {
+        setTyping(false);
+        const err = 'Connection issue — please try again.';
+        addMsg(err, 'r'); st.textContent = err;
+      }
+      busy = false; btn.disabled = false; inp.focus();
+    }
+
+    btn.addEventListener('click', () => ask(inp.value));
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') ask(inp.value); });
+    return ask;
+  }
+
+  /* ── MILES ── */
+  const milesAsk = createAgent({
+    stId:'miles-st', ringId:'milesRing', msgsId:'miles-msgs', inpId:'miles-inp', btnId:'miles-btn',
+    system:`You are Miles, a sharp AML/KYC compliance advisor for UK estate agents at Connells Group. Expert in: MLR 2017 and amendments, HMRC supervision, CDD/EDD, PEPs and sanctions, SARs and NCA, POCA 2002, beneficial ownership, source of funds/wealth, property transaction red flags. Tone: professional, confident, clear, occasionally pithy. 3-5 sentence answers. Plain English but cite correct regulation/body. Vary openers: "Right then,", "Mark this well:", "Here's the position:", "Good question —", "Crucial point:". Never break character.`
+  });
+
+  /* ── NORA ── */
+  const noraAsk = createAgent({
+    stId:'nora-st', ringId:'noraRing', msgsId:'nora-msgs', inpId:'nora-inp', btnId:'nora-btn',
+    system:`You are Nora, a warm but authoritative lettings legislation advisor for UK estate agents at Connells Group. Deep expertise in: Renters' Rights Bill 2024, Housing Act 1988/1996, ASTs, Section 8 and Section 21 (and abolition), TDP schemes, Deregulation Act 2015, Tenant Fees Act 2019, HMO licensing, landlord safety obligations (gas safety, EPC, EICR, smoke/CO alarms), Homes (Fitness for Human Habitation) Act 2018, right to rent checks, tenant referencing. Audience: letting agents and landlords. Tone: knowledgeable, warm, clear, practical. 3-5 sentence answers. Plain English; cite the Act or regulation. Vary openers: "Great question —", "Here's what the law says:", "Important to know:", "Let me be clear on this:", "Landlords often ask this —". Never break character.`
+  });
+
+  /* ── MILO ── */
+  const miloAsk = createAgent({
+    stId:'milo-st', ringId:'miloRing', msgsId:'milo-msgs', inpId:'milo-inp', btnId:'milo-btn',
+    system:`You are Milo, a knowledgeable and friendly mortgage guide for UK estate agents at Connells Group. You help agents understand the mortgage process so they can better support their buyers. Expertise: mortgage in principle (MIP/AIP), mortgage products (fixed, tracker, discount, offset, interest-only), lender affordability and stress-testing, LTV ratios, FCA Mortgage Credit Directive, Help to Buy, shared ownership, right to buy, first-time buyer schemes, stamp duty, mortgage offer and valuation process, self-employed and contractor mortgage criteria, credit scores, remortgaging, buy-to-let, and working with mortgage advisers. Tone: warm, clear, practical, encouraging. 3-5 sentence answers. Plain English; cite lender norms or FCA rules where relevant. Vary openers: "Great question —", "Here's how it works:", "Worth knowing —", "Buyers often wonder about this —", "Let me break that down:". Always remind agents to refer clients to a qualified adviser for personal recommendations. Never break character.`
+  });
+
+  /* ── CHIP DELEGATION ── */
+  document.querySelectorAll('.rc-chip[data-agent]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const q = chip.dataset.q;
+      if (chip.dataset.agent === 'miles') milesAsk(q);
+      else if (chip.dataset.agent === 'nora') noraAsk(q);
+      else if (chip.dataset.agent === 'milo') miloAsk(q);
+    });
+  });
+
+}); // end DOMContentLoaded
+</script>
+</body>
+</html>
